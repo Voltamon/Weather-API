@@ -17,7 +17,7 @@ class WeatherApp():
 
           return id
         except KeyError:
-          if not self.i == 2:
+          if not self.i == len(self.api_key):
             self.i += 1
             return self.get_city_id(city_name)
           else:
@@ -35,7 +35,7 @@ class WeatherApp():
 
           return data[0]
         except KeyError:
-          if not self.i == 2:
+          if not self.i == len(self.api_key):
             self.i += 1
             return self.get_current_data(city_name)
           else:
@@ -53,7 +53,7 @@ class WeatherApp():
 
           return data["DailyForecasts"]
         except KeyError:
-          if not self.i == 2:
+          if not self.i == len(self.api_key):
             self.i += 1
             return self.get_forecast_data(city_name)
           else:
