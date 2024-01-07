@@ -4,7 +4,7 @@ from requests.exceptions import ConnectionError
 
 class WeatherApp():
     def __init__(self):
-        self.api_key = ["JDGnXhCOCIafqb5UOU0mkdgVbwAVDijD", "OTda2yqDln959PLbDdyrvgwduCpSYNgK", "l5p35qukE5crJlIvvL2tFJlTthp9dvaY"]
+        self.api_key = [# YOUR API KEYS]
         self.i = 0
   
     def get_city_id(self, city_name):
