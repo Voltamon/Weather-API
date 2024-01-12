@@ -17,7 +17,7 @@ class WeatherApp():
 
           return id
         except KeyError:
-          if not self.i == 2:
+          if self.i < len(self.api_key) - 1:
             self.i += 1
             return self.get_city_id(city_name)
           else:
@@ -35,7 +35,7 @@ class WeatherApp():
 
           return data[0]
         except KeyError:
-          if not self.i == 2:
+          if self.i < len(self.api_key) - 1:
             self.i += 1
             return self.get_current_data(city_id)
           else:
@@ -53,7 +53,7 @@ class WeatherApp():
 
           return data["DailyForecasts"]
         except KeyError:
-          if not self.i == 2:
+          if self.i < len(self.api_key) - 1:
             self.i += 1
             return self.get_forecast_data(city_id)
           else:
@@ -119,25 +119,9 @@ class WeatherApp():
         
         while True:
             try:
-                city_key = self.get_city_id(city_name)
-            except KeyError:
-                if not self.i == 2:
-                  self.i += 1   
-                  city_key = self.get_city_id(city_name)
-                else:
-                  print('Limit reached for the day')
-                  exit()
-            except IndexError:
-                print("City doesn't exist, Try Again")
-                print()
-                self.main()
-            except ConnectionError:
-                print("Check your internet connection, Try Again")
-                print()
-                self.main()
-             
-            self.display_menu()
-            try:
+                city_key = self.get_city_id(city_name)          
+                self.display_menu()
+     
                 ch = int(input("Enter your choice : "))
                 print()
 
@@ -151,6 +135,10 @@ class WeatherApp():
                     exit()
                 else:
                     raise ValueError
+            except IndexError:
+													print("City doesn't exist, Try Again")
+                print()
+                self.main()
             except ValueError:
                 print("Invalid Input, Try Again")
                 print()
