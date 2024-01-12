@@ -4,7 +4,7 @@ from requests.exceptions import ConnectionError
 
 class WeatherApp():
     def __init__(self):
-        self.api_key = [# YOUR API KEYS]
+        self.api_key = [#YOUR API KEYS]
         self.i = 0
   
     def get_city_id(self, city_name):
@@ -17,16 +17,16 @@ class WeatherApp():
 
           return id
         except KeyError:
-          if not self.i == len(self.api_key):
+          if not self.i == 2:
             self.i += 1
             return self.get_city_id(city_name)
           else:
             print("Limit reached for the day")
             exit()      
     
-    def get_current_data(self, city_name):
+    def get_current_data(self, city_id):
         try:
-          city_key = self.get_city_id(city_name)
+          city_key = city_id
 
           url = f'http://dataservice.accuweather.com/currentconditions/v1/{city_key}?apikey={self.api_key[self.i]}&language=en-us&details=true'
 
@@ -35,16 +35,16 @@ class WeatherApp():
 
           return data[0]
         except KeyError:
-          if not self.i == len(self.api_key):
+          if not self.i == 2:
             self.i += 1
-            return self.get_current_data(city_name)
+            return self.get_current_data(city_id)
           else:
             print("Limit reached for the day")
             exit()
   
-    def get_forecast_data(self, city_name):
+    def get_forecast_data(self, city_id):
         try:
-          city_key = self.get_city_id(city_name)
+          city_key = city_id
 
           url = f'http://dataservice.accuweather.com/forecasts/v1/daily/5day/{city_key}?apikey={self.api_key[self.i]}&language=en-us&details=false&metric=true'
 
@@ -53,15 +53,15 @@ class WeatherApp():
 
           return data["DailyForecasts"]
         except KeyError:
-          if not self.i == len(self.api_key):
+          if not self.i == 2:
             self.i += 1
-            return self.get_forecast_data(city_name)
+            return self.get_forecast_data(city_id)
           else:
             print('Limit reached for the day')
             exit()
             
-    def current_weather(self, city_name):
-        weather_data = self.get_current_data(city_name)
+    def current_weather(self, city_name, city_id):
+        weather_data = self.get_current_data(city_id)
         
         wt_city_name = city_name
         wt_status = weather_data["WeatherText"] 
@@ -85,8 +85,8 @@ class WeatherApp():
         print(f'{wt_wind_spd} km/h from {wt_wind_dir}', f'Gust {wt_wind_gst} km/h', sep=str(" " * (40 - len(wt_wind_spd + wt_wind_dir + wt_wind_gst) - 21)))
         print()
 
-    def forecast_weather(self, city_name):
-        weather_data = self.get_forecast_data(city_name)
+    def forecast_weather(self, city_id):
+        weather_data = self.get_forecast_data(city_id)
         
         for i in range(0, 5):
             data = weather_data[i]
@@ -116,28 +116,41 @@ class WeatherApp():
     def main(self):
         city_name = input("Enter city name : ")
         print()
-
+        
         while True:
+            try:
+                city_key = self.get_city_id(city_name)
+            except KeyError:
+                if not self.i == 2:
+                  self.i += 1   
+                  city_key = self.get_city_id(city_name)
+                else:
+                  print('Limit reached for the day')
+                  exit()
+            except IndexError:
+                print("City doesn't exist, Try Again")
+                print()
+                self.main()
+            except ConnectionError:
+                print("Check your internet connection, Try Again")
+                print()
+                self.main()
+             
             self.display_menu()
-
             try:
                 ch = int(input("Enter your choice : "))
                 print()
 
                 if ch == 1:      
-                    self.current_weather(city_name)
+                    self.current_weather(city_name, city_key)
                 elif ch == 2:        
-                    self.forecast_weather(city_name)
+                    self.forecast_weather(city_key)
                 elif ch == 3:
                     self.main()
                 elif ch == 4:
                     exit()
                 else:
                     raise ValueError
-            except IndexError:
-                print("City doesn't exist, Try Again")
-                print()
-                self.main()
             except ValueError:
                 print("Invalid Input, Try Again")
                 print()
