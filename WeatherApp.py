@@ -119,7 +119,9 @@ class WeatherApp():
         
         while True:
             try:
-                city_key = self.get_city_id(city_name)          
+                city_key = self.get_city_id(city_name)
+
+          
                 self.display_menu()
      
                 ch = int(input("Enter your choice : "))
@@ -136,7 +138,7 @@ class WeatherApp():
                 else:
                     raise ValueError
             except IndexError:
-													print("City doesn't exist, Try Again")
+		print("City doesn't exist, Try Again")
                 print()
                 self.main()
             except ValueError:
