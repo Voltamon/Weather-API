@@ -120,8 +120,6 @@ class WeatherApp():
         while True:
             try:
                 city_key = self.get_city_id(city_name)
-
-          
                 self.display_menu()
      
                 ch = int(input("Enter your choice : "))
